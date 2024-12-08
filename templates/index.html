@@ -9,10 +9,10 @@
     <h1>Welcome to My Flask App</h1>
     {% if 'user_id' in session %}
         <p>You are logged in as user {{ session['user_id'] }}</p>
-        <a href="{{ url_for('auth.logout') }}">Logout</a>
+        <a href="{{ url_for('api_gateway.auth.logout') }}">Logout</a>
     {% else %}
-        <a href="{{ url_for('auth.login') }}">Login</a>
-        <a href="{{ url_for('auth.register') }}">Register</a>
+        <a href="{{ url_for('api_gateway.auth.login') }}">Login</a>
+        <a href="{{ url_for('api_gateway.auth.register') }}">Register</a>
     {% endif %}
 </body>
 </html>

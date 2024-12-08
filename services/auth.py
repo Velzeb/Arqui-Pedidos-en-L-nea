@@ -16,10 +16,10 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        # Verificar el email y la contraseña con la base de datos
         user = Cliente.query.filter_by(correo=email).first()
         if user and (user.contrasena, password):
             session['user_id'] = user.id_cliente
+            flash('Login successful!', 'success')
             return redirect(url_for('home'))
         else:
             flash('Invalid email or password', 'danger')
@@ -38,7 +38,7 @@ def register():
         db.session.commit()
         
         flash('Registration successful! Please log in.', 'success')
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('api_gateway.auth.login'))
     return render_template('register.html')
 
 @auth_bp.route('/logout')

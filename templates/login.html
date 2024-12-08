@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Login</h1>
-    <form method="POST" action="{{ url_for('auth.login') }}">
+    <form method="POST" action="{{ url_for('api_gateway.auth.login') }}">
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required>
         <br>

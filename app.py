@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, redirect, url_for, session
+from flask import render_template
 from database import create_app, db
 from routes import init_routes
 
