@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+</head>
+<body>
+    <h1>Payment</h1>
+    <form method="POST" action="{{ url_for('api_gateway.payment.process_payment') }}">
+        <label for="forma_pago">Payment Method:</label>
+        <select id="forma_pago" name="forma_pago" required>
+            {% for forma in formas_pago %}
+                <option value="{{ forma.id_forma_pago }}">{{ forma.forma_pago }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <button type="submit">Pay</button>
+    </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>

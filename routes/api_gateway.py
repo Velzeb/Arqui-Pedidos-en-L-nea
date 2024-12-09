@@ -7,11 +7,8 @@ from services.notification import notification_bp
 
 api_gateway_bp = Blueprint('api_gateway', __name__)
 
-api_gateway_bp.register_blueprint(auth_bp, url_prefix='/services/auth')
-api_gateway_bp.register_blueprint(catalog_bp, url_prefix='/services/catalog')
-api_gateway_bp.register_blueprint(cart_bp, url_prefix='/services/cart')
-api_gateway_bp.register_blueprint(payment_bp, url_prefix='/services/payment')
-api_gateway_bp.register_blueprint(notification_bp, url_prefix='/services/notification')
-
-
-                                  
+api_gateway_bp.register_blueprint(auth_bp, url_prefix='/auth')
+api_gateway_bp.register_blueprint(catalog_bp, url_prefix='/catalog')
+api_gateway_bp.register_blueprint(cart_bp, url_prefix='/cart')
+api_gateway_bp.register_blueprint(payment_bp, url_prefix='/payment')
+api_gateway_bp.register_blueprint(notification_bp, url_prefix='/notification')

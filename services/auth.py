@@ -1,15 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import db
+from services.models import Cliente
 
 auth_bp = Blueprint('auth', __name__)
-
-class Cliente(db.Model):
-    __tablename__ = 'cliente'
-    id_cliente = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(50), nullable=False)
-    correo = db.Column(db.String(50), nullable=False, unique=True)
-    contrasena = db.Column(db.String(50), nullable=False)
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():

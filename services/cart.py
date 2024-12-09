@@ -1,23 +1,48 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from database import db
+from services.models import Producto
 
 cart_bp = Blueprint('cart', __name__)
 
-class Carrito(db.Model):
-    __tablename__ = 'carrito'
-    id_carrito = db.Column(db.Integer, primary_key=True)
-    cliente_id_cliente = db.Column(db.Integer, nullable=False)
-    producto_id_producto = db.Column(db.Integer, nullable=False)
+@cart_bp.route('/cart', methods=['GET', 'POST'])
+def view_cart():
+    if request.method == 'POST':
+        producto_id = request.form['producto_id']
+        cantidad = int(request.form['cantidad'])
+        cliente_id = session.get('user_id')
 
-@cart_bp.route('/cart', methods=['GET'])
-def get_cart():
-    cart_items = Carrito.query.all()
-    return jsonify([item.to_dict() for item in cart_items])
+        if not cliente_id:
+            flash('You need to log in first.', 'danger')
+            return redirect(url_for('api_gateway.auth.login'))
 
-@cart_bp.route('/cart', methods=['POST'])
-def add_to_cart():
-    data = request.get_json()
-    new_item = Carrito(cliente_id_cliente=data['cliente_id_cliente'], producto_id_producto=data['producto_id_producto'])
-    db.session.add(new_item)
-    db.session.commit()
-    return jsonify(new_item.to_dict()), 201
+        if 'cart' not in session:
+            session['cart'] = []
+
+        cart = session['cart']
+        existing_item = next((item for item in cart if item['producto_id'] == producto_id), None)
+        if existing_item:
+            existing_item['cantidad'] += cantidad
+        else:
+            cart.append({'producto_id': producto_id, 'cantidad': cantidad})
+
+        session['cart'] = cart
+        flash('Product added to cart!', 'success')
+        return redirect(url_for('api_gateway.cart.view_cart'))
+
+    cliente_id = session.get('user_id')
+    if not cliente_id:
+        flash('You need to log in first.', 'danger')
+        return redirect(url_for('api_gateway.auth.login'))
+
+    cart = session.get('cart', [])
+    cart_items = [{'producto': Producto.query.get(item['producto_id']), 'cantidad': item['cantidad']} for item in cart]
+    products = Producto.query.all()
+    return render_template('cart.html', cart_items=cart_items, products=products)
+
+@cart_bp.route('/cart/delete/<int:producto_id>', methods=['POST'])
+def delete_from_cart(producto_id):
+    cart = session.get('cart', [])
+    cart = [item for item in cart if item['producto_id'] != producto_id]
+    session['cart'] = cart
+    flash('Item removed from cart.', 'success')
+    return redirect(url_for('api_gateway.cart.view_cart'))

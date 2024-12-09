@@ -14,5 +14,7 @@
         <a href="{{ url_for('api_gateway.auth.login') }}">Login</a>
         <a href="{{ url_for('api_gateway.auth.register') }}">Register</a>
     {% endif %}
+    <a href="{{ url_for('api_gateway.catalog.get_products') }}">Catalog</a>
+    <a href="{{ url_for('api_gateway.cart.view_cart') }}">Cart</a>
 </body>
 </html>
